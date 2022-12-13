@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 
 function InterventionCard() {
   return (
-    <Card style={{ width: "18rem" }}>
+    <Card style={{ width: "18rem", padding: "10px", margin: "3px" }}>
       <Card.Body>
         <Card.Title>Intervention</Card.Title>
         <Card.Text>Intervention id:</Card.Text>
