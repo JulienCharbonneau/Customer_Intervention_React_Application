@@ -1,7 +1,14 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 
 function AuthenticationForm() {
+  let navigate = useNavigate();
+  const routeChange = () => {
+    let path = `/Home`;
+    navigate(path);
+  };
+
   return (
     <div
       style={{ padding: "100px" }}
@@ -21,8 +28,7 @@ function AuthenticationForm() {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Password" />
         </Form.Group>
-
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" onClick={routeChange}>
           Submit
         </Button>
       </Form>
