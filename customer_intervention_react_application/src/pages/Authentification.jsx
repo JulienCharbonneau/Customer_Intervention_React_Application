@@ -2,14 +2,42 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useState } from "react";
 
 function Authentication() {
+  // change page with react-router-dom
   let navigate = useNavigate();
-  const routeChange = () => {
+
+  function routeChange() {
     let path = `/Home`;
     navigate(path);
-  };
+  }
 
+  // get user credential
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios({
+      method: "post",
+      url: "authenticate?email=" + email + "&password=" + password,
+    }).then((response) => {
+      if (response.data.access_token) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        routeChange();
+      } else {
+        alert("Please ");
+      }
+
+      return response.data;
+    });
+    console.log("this credential: " + email + " " + password);
+  };
+  console.log(email);
+
+  // Get acces token
+
+  //   ends
   return (
     <div
       style={{ padding: "100px" }}
@@ -19,17 +47,25 @@ function Authentication() {
         Please sign-in to your Rocket Elevators account.
       </h4>
 
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            onChange={(event) => setEmail(event.target.value)}
+          />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={routeChange}>
+        <Button variant="primary" type="submit">
           Submit
         </Button>
       </Form>
@@ -38,3 +74,4 @@ function Authentication() {
 }
 
 export default Authentication;
+// onClick={routeChange}
