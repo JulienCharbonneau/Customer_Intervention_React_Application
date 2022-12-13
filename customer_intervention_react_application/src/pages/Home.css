@@ -21,11 +21,13 @@
 
 .InterventionCard {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
-
   background-color: aqua;
   height: auto;
   width: 75%;
+  padding: 20px;
+  margin-bottom: 100px;
 }
 
 h2 {
