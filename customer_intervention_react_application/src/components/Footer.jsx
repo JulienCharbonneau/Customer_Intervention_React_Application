@@ -5,6 +5,8 @@ function Footer() {
     <footer
       className="mb-auto"
       style={{
+        position: "fixed",
+        bottom: 0,
         marginTop: 80,
         height: 150,
         width: "100%",

@@ -9,7 +9,7 @@ function Layout() {
     <div className="d-flex flex-column">
       <Header />
       <Outlet />
-      <Footer />
+      <Footer className="align-self-baseline" />
     </div>
   );
 }
