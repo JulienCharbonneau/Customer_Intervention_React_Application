@@ -6,10 +6,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function Layout() {
   return (
-    <div className="d-flex flex-column">
+    <div>
       <Header />
       <Outlet />
-      <Footer className="align-self-baseline" />
+      <Footer />
     </div>
   );
 }

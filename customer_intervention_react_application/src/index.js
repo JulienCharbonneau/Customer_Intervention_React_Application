@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import AuthenticationForm from "./pages/Authentification";
 import Home from "./pages/Home";
+import InterventionCard from "./components/InterventionCards";
+import InternventionsForm from "./pages/InterventionsForm";
 
 export default function App() {
   return (
@@ -16,6 +18,9 @@ export default function App() {
         </Route>
         <Route path="/Home" element={<Layout />}>
           <Route index element={<Home />} />
+        </Route>
+        <Route path="/InternventionsForm" element={<Layout />}>
+          <Route index element={<InternventionsForm />} />
         </Route>
       </Routes>
     </BrowserRouter>
