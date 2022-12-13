@@ -21,16 +21,18 @@ function Authentication() {
     axios({
       method: "post",
       url: "authenticate?email=" + email + "&password=" + password,
-    }).then((response) => {
-      if (response.data.access_token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        routeChange();
-      } else {
-        alert("Please ");
-      }
-
-      return response.data;
-    });
+    })
+      .then((response) => {
+        if (response.data.access_token !== null) {
+          localStorage.setItem("user", JSON.stringify(response.data));
+          routeChange();
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        alert("Log in failed. Please try again.");
+        console.log(error);
+      });
     console.log("this credential: " + email + " " + password);
   };
   console.log(email);
