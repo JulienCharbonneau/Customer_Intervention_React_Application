@@ -13,7 +13,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="" element={<Layout />}>
+        <Route path="/Authentication" element={<Layout />}>
           <Route index element={<Authentication />} />
         </Route>
         <Route path="/Home" element={<Layout />}>
