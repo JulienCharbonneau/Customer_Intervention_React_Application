@@ -4,7 +4,7 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
-import AuthenticationForm from "./pages/Authentification";
+import Authentication from "./pages/Authentification";
 import Home from "./pages/Home";
 import InterventionCard from "./components/InterventionCards";
 import InternventionsForm from "./pages/InterventionsForm";
@@ -14,7 +14,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="" element={<Layout />}>
-          <Route index element={<AuthenticationForm />} />
+          <Route index element={<Authentication />} />
         </Route>
         <Route path="/Home" element={<Layout />}>
           <Route index element={<Home />} />
