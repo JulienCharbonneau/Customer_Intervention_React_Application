@@ -3,12 +3,12 @@ import React from "react";
 function Footer() {
   return (
     <footer
-      className="mb-auto"
+      // className="mb-auto"
       style={{
         position: "relative",
         bottom: 0,
         marginTop: 80,
-        height: 150,
+        height: 200,
         width: "100%",
         backgroundColor: "gray",
       }}

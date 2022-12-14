@@ -24,7 +24,10 @@ function Authentication() {
     })
       .then((response) => {
         if (response.data.access_token !== null) {
-          localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem(
+            "user",
+            response.data.access_token
+          );
           routeChange();
         }
       })

@@ -4,8 +4,37 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import InterventionCard from "../components/InterventionCards";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import axios from "axios";
+import { useState } from "react";
+
 
 function Home() {
+  // save data from api call
+
+  const token = localStorage.getItem("user"); // get token from local storage
+  console.log("token: ", token)
+  // current user
+  const [interventions, setInterventions] = useState([]);
+  
+ const getInterventions = axios({
+    method: "get",
+    url: "/customers/current",
+    headers: {
+      Authorization: 'Bearer ' + token,
+    }
+  }).then((response) => {
+    console.log("this is the response: ", response)
+  }).catch(function (error) {
+    console.log(error)
+  })
+  // all internvetion by id for specifique user
+  // get status for specifique intervention
+  // get all building id or adress for specifique intervention
+  // get baterry id for specifique intervention
+  // if columns in intervention show column id
+  // if elevator in intervention show elevator id
+
+  // go to intervention page
   let navigate = useNavigate();
   const go_to_intervention = () => {
     let path = `/InternventionsForm`;
