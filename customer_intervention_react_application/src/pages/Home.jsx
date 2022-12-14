@@ -5,54 +5,66 @@ import InterventionCard from "../components/InterventionCards";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+// save data from api call
 
-function Home() {
-  // save data from api call
-
+// current user
+const getCurrentUser = async (setInterventions) => {
   const token = localStorage.getItem("user"); // get token from local storage
-  console.log("token: ", token)
-  // current user
-  const [interventions, setInterventions] = useState([]);
-  
- const getInterventions = axios({
-    method: "get",
-    url: "/customers/current",
-    headers: {
-      Authorization: 'Bearer ' + token,
-    }
-  }).then((response) => {
-    console.log("this is the response: ", response)
-  }).catch(function (error) {
-    console.log(error)
-  })
-  // all internvetion by id for specifique user
+  try {
+    const res = await axios.get("/customers/current", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    console.log("respose:", res);
+    setInterventions(res.data);
+  } catch (error) {
+    console.warn("[getInterventions] error:", error);
+  }
+
   // get status for specifique intervention
+
   // get all building id or adress for specifique intervention
   // get baterry id for specifique intervention
   // if columns in intervention show column id
   // if elevator in intervention show elevator id
+};
+// go to intervention page
 
-  // go to intervention page
+const go_to_intervention = (navigate) => {
+  let path = `/InternventionsForm`;
+  navigate(path);
+};
+// return to authentication page and erase local storage
+
+const go_to_authentication = (navigate) => {
+  let path = `/Authentication`;
+  navigate(path);
+  localStorage.removeItem("user");
+};
+
+function Home() {
   let navigate = useNavigate();
-  const go_to_intervention = () => {
-    let path = `/InternventionsForm`;
-    navigate(path);
-  };
-  // return to authentication page and erase local storage
-  const go_to_authentication = () => {
-    let path = `/Authentication`;
-    navigate(path);
-    localStorage.removeItem("user");
-  };
+  const [interventions, setInterventions] = useState(null);
+
+  useEffect(() => {
+    console.log("Home mounted!");
+    getCurrentUser(setInterventions);
+  }, []);
+
+  useEffect(() => {
+    console.log("interventions changed:", interventions);
+  }, [interventions]);
 
   return (
     <div className="flex-column">
       <Button
         className="align-self-end m-3"
         variant="danger"
-        onClick={go_to_authentication}
+        onClick={() => go_to_authentication(navigate)}
       >
         Log out
       </Button>
@@ -60,14 +72,13 @@ function Home() {
         <h2>Welcome to your Rockect Elevators Portail</h2>
         <div className="flex-row">
           <h4>Your interventions</h4>
-          <button onClick={go_to_intervention}>Create new intervention</button>
+          <button onClick={() => go_to_intervention(navigate)}>
+            Create new intervention
+          </button>
         </div>
       </div>
-      <div className="InterventionCard">
-        <InterventionCard />
-        <InterventionCard />
-        <InterventionCard />
-        <InterventionCard />
+      <div className="border border-secondary">
+        <h3>dsadfsdgfsfsdf</h3>
       </div>
     </div>
   );
