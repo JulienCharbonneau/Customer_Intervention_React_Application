@@ -45,6 +45,7 @@ function Home() {
   useEffect(() => {
     async function fetchData() {
       console.log("Home mounted!");
+
       await getCurrentUser(setInterventions);
     }
     fetchData();
@@ -56,36 +57,24 @@ function Home() {
   }, [interventions]);
 
 
+
+  // format string to return for all intervention
   const listInterventions = interventions.map((intervention) => {
-    if (typeof intervention.building == "number") { // it the intervention is only in the battery with type number
-      return  <li>
-   Intervention ID:{intervention.id} Result: {intervention.result} Building ID: {intervention.building}
-    </li>
+    let str = "Intervention ";
+    Object.entries(intervention).map(([key, value]) => {
+      console.log("test: ",key,value)
+      if (key != "createdAt" && key != "intervention_ended" && key != "intervention_started" && key != "updatedAt" && key != "author" && key != "employee" ){ // handle execptions
+      if (typeof value == "object" && value != null && key != "id") { // output value depends if object or number
+        str = str + key + "id :" + value.id + " "
+      }
+      else if (typeof value == "number" && value != null ) {
+        str = str + key +  ": " + value + " "
+      }
     }
-    else {
- return   <li>
- Intervention ID:{intervention.id} Result: {intervention.result} Building ID: {intervention.building.id}
-
-</li>
-
-  
-  }
-  // else if (typeof intervention.battery == "number" && typeof intervention.battery) {
-  //   <li>
-  //   Intervention ID:{intervention.id} Result: {intervention.result} Building ID: {intervention.building} 
-  // </li>
-  // }
+    })
+  return  <li>{str}</li>
   })
 
-
-
-
-
-  // const listInterventions = interventions.map((intervention) => (
-  //   <li>
-  //     {intervention.id} sdds {intervention.id}
-  //   </li>
-  // ));
 
   return (
     <div className="flex-column">
