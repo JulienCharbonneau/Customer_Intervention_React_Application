@@ -55,12 +55,37 @@ function Home() {
     console.log("interventions changed:", interventions);
   }, [interventions]);
 
-  console.log("test: ", interventions[0]);
-  const listInterventions = interventions.map((intervention) => (
-    <li>
-      {intervention.id} sdds {intervention.id}
+
+  const listInterventions = interventions.map((intervention) => {
+    if (typeof intervention.building == "number") { // it the intervention is only in the battery with type number
+      return  <li>
+   Intervention ID:{intervention.id} Result: {intervention.result} Building ID: {intervention.building}
     </li>
-  ));
+    }
+    else {
+ return   <li>
+ Intervention ID:{intervention.id} Result: {intervention.result} Building ID: {intervention.building.id}
+
+</li>
+
+  
+  }
+  // else if (typeof intervention.battery == "number" && typeof intervention.battery) {
+  //   <li>
+  //   Intervention ID:{intervention.id} Result: {intervention.result} Building ID: {intervention.building} 
+  // </li>
+  // }
+  })
+
+
+
+
+
+  // const listInterventions = interventions.map((intervention) => (
+  //   <li>
+  //     {intervention.id} sdds {intervention.id}
+  //   </li>
+  // ));
 
   return (
     <div className="flex-column">
