@@ -18,22 +18,14 @@ const getCurrentUser = async (setInterventions) => {
         Authorization: "Bearer " + token,
       },
     });
-
+    setInterventions(res.data.interventions);
     console.log("respose:", res);
-    setInterventions(res.data);
   } catch (error) {
     console.warn("[getInterventions] error:", error);
   }
-
-  // get status for specifique intervention
-
-  // get all building id or adress for specifique intervention
-  // get baterry id for specifique intervention
-  // if columns in intervention show column id
-  // if elevator in intervention show elevator id
 };
-// go to intervention page
 
+// go to intervention page
 const go_to_intervention = (navigate) => {
   let path = `/InternventionsForm`;
   navigate(path);
@@ -47,17 +39,28 @@ const go_to_authentication = (navigate) => {
 };
 
 function Home() {
+  const [interventions, setInterventions] = useState([]);
   let navigate = useNavigate();
-  const [interventions, setInterventions] = useState(null);
 
   useEffect(() => {
-    console.log("Home mounted!");
-    getCurrentUser(setInterventions);
+    async function fetchData() {
+      console.log("Home mounted!");
+      await getCurrentUser(setInterventions);
+    }
+    fetchData();
   }, []);
 
   useEffect(() => {
+    console.log("interventions test:", interventions);
     console.log("interventions changed:", interventions);
   }, [interventions]);
+
+  console.log("test: ", interventions[0]);
+  const listInterventions = interventions.map((intervention) => (
+    <li>
+      {intervention.id} sdds {intervention.id}
+    </li>
+  ));
 
   return (
     <div className="flex-column">
@@ -79,6 +82,7 @@ function Home() {
       </div>
       <div className="border border-secondary">
         <h3>dsadfsdgfsfsdf</h3>
+        <ul>{listInterventions}</ul>
       </div>
     </div>
   );
