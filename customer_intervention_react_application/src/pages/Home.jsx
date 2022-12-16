@@ -1,7 +1,6 @@
 import React from "react";
 import "./Home.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import InterventionCard from "../components/InterventionCards";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import axios from "axios";
@@ -56,35 +55,42 @@ function Home() {
     console.log("interventions changed:", interventions);
   }, [interventions]);
 
-
-
   // format string to return for all intervention
   const listInterventions = interventions.map((intervention) => {
     let str = "Intervention ";
     Object.entries(intervention).map(([key, value]) => {
-      console.log("test: ",key,value)
-      if (key != "createdAt" && key != "intervention_ended" && key != "intervention_started" && key != "updatedAt" && key != "author"
-       && key != "employee" && key != "customer" && key != "status" && key != "report" ){ // handle execptions
-      if (typeof value == "object" && value != null && key != "id") { // output value depends if object or number
-        str = str + key + " id: " + value.id + " "
+      if (
+        key != "createdAt" &&
+        key != "intervention_ended" &&
+        key != "intervention_started" &&
+        key != "updatedAt" &&
+        key != "author" &&
+        key != "employee" &&
+        key != "customer" &&
+        key != "status" &&
+        key != "report"
+      ) {
+        // handle execptions
+        if (typeof value == "object" && value != null && key != "id") {
+          // output value depends if object or number
+          str = str + key + " id: " + value.id + " ";
+        } else if (typeof value == "object" && value != null && key == "id") {
+          str = str + key + ": " + value.id + " ";
+        } else if (typeof value == "number" && value != null && key == "id") {
+          str = str + key + ": " + value + " ";
+        } else if (typeof value == "number" && value != null && key != "id") {
+          str = str + key + " id: " + value + " ";
+        } else if (typeof value == "string" && value != null) {
+          str = str + key + ": " + value + " ";
+        }
       }
-      else if (typeof value == "object" && value != null && key == "id") {
-        str = str + key + ": " + value.id + " "
-      }
-      else if (typeof value == "number" && value != null && key == "id") {
-        str = str + key +  ": " + value + " "
-      }
-      else if (typeof value == "number" && value != null && key != "id"){
-        str = str + key +  " id: " + value + " "
-      }
-       else if (typeof value == "string" && value != null) {
-        str = str + key +  ": " + value + " "
-       }
-    }
-    })
-  return  <li className="border border-end-0 border-start-0 border-top-0 border-secondary m-2" >{str}</li>
-  })
-
+    });
+    return (
+      <li className="border border-end-0 border-start-0 border-top-0 border-secondary m-2">
+        {str}
+      </li>
+    );
+  });
 
   return (
     <div className="flex-column">
@@ -96,7 +102,7 @@ function Home() {
         Log out
       </Button>
       <div className="top-section">
-        <h2>Welcome back  to your Rockect Elevators Portail</h2>
+        <h2>Welcome back to your Rockect Elevators Portail</h2>
         <div className="flex-row">
           <h6>{interventions.compagny_name}</h6>
           <button onClick={() => go_to_intervention(navigate)}>
@@ -106,7 +112,7 @@ function Home() {
       </div>
       <div className="flex-column border border-secondary">
         <h3>Your interventions</h3>
-        <ul className="m-2" >{listInterventions}</ul>
+        <ul className="m-2">{listInterventions}</ul>
       </div>
     </div>
   );
