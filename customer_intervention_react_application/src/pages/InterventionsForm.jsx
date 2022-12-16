@@ -87,6 +87,28 @@ const ColumnsList = ({ columns }) => {
   });
 };
 
+// get current user elevator
+async function getElevator(id, setElevators) {
+  const token = localStorage.getItem("user"); // get token from local storage
+  try {
+    const res = await axios.get("/columns/" + id + "/elevators", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    setElevators(res.data);
+    console.log("respone elevator:", res.data);
+  } catch (error) {
+    console.warn("[getInterventions] error:", error);
+  }
+}
+
+const ElevatorsList = ({ elevators }) => {
+  return elevators.map((elevator) => {
+    return <option value={elevator.id}> Elevator id: {elevator.id}</option>;
+  });
+};
+
 ///////////////////////////////////////////////////////////
 function InternventionsForm() {
   const [buildings, setBuildings] = useState([]);
@@ -95,6 +117,8 @@ function InternventionsForm() {
   const [battery_id, setBatteryId] = useState(null);
   const [columns, setColumns] = useState([]);
   const [column_id, setColumnId] = useState(null);
+  const [elevators, setElevators] = useState([]);
+  const [elevator_id, setElevatorId] = useState(null);
 
   let navigate = useNavigate();
 
@@ -126,15 +150,15 @@ function InternventionsForm() {
     fetchData();
   }, [battery_id]);
 
-  // fetch columns data on columns select option change
+  // fetch elevators data on columns select option change
 
-  // useEffect(() => {
-  //   console.log("select column option: ", column_id);
-  //   async function fetchData() {
-  //     setColumns(getColumns(column_id, setColumns));
-  //   }
-  //   fetchData();
-  // }, [column_id]);
+  useEffect(() => {
+    console.log("select elevator option: ", elevator_id);
+    async function fetchData() {
+      setElevators(getElevator(column_id, setElevators));
+    }
+    fetchData();
+  }, [column_id]);
 
   ///////////////////
   return (
@@ -186,6 +210,16 @@ function InternventionsForm() {
         >
           <option>Select a Column</option>
           {columns.length > 0 && <ColumnsList columns={columns} />}
+        </Form.Select>
+
+        <Form.Select
+          onChange={(e) => setElevatorId(e.target.value)}
+          id="elevator_option"
+          key={elevators.id}
+          aria-label="Default select example"
+        >
+          <option>Select a Elevator</option>
+          {elevators.length > 0 && <ElevatorsList elevators={elevators} />}
         </Form.Select>
       </div>
     </div>
