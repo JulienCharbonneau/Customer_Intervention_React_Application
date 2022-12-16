@@ -13,6 +13,7 @@ function InternventionsForm() {
     let path = `/Authentication`;
     navigate(path);
     localStorage.removeItem("user");
+    localStorage.removeItem("user_id");
   };
 
   // go to home page

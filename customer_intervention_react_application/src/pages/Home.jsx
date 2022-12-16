@@ -37,6 +37,7 @@ const go_to_authentication = (navigate) => {
   let path = `/Authentication`;
   navigate(path);
   localStorage.removeItem("user");
+  localStorage.removeItem("user_id");
 };
 
 function Home() {
