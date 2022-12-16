@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import "./Home.css"; // use home css for one class top section
+import Form from "react-bootstrap/Form";
 
 function InternventionsForm() {
   let navigate = useNavigate();
@@ -38,7 +39,12 @@ function InternventionsForm() {
         </Button>
       </div>
       <div className="top-section"></div>
-      <h1>this is a page for a form </h1>
+      <h1>Request for intervention </h1>
+      <div className="m-3">
+        <Form.Select aria-label="Default select example">
+          <option>Select a building</option>
+        </Form.Select>
+      </div>
     </div>
   );
 }

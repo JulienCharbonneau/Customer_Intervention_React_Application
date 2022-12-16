@@ -18,7 +18,9 @@ const getCurrentUser = async (setInterventions) => {
       },
     });
     setInterventions(res.data.interventions);
-    console.log("respose:", res);
+    localStorage.setItem("user_id", res.data.id);
+
+    console.log("respone:", res.data);
   } catch (error) {
     console.warn("[getInterventions] error:", error);
   }
