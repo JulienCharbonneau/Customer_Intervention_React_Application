@@ -62,6 +62,7 @@ function Home() {
   const listInterventions = interventions.map((intervention) => {
     let str = "Intervention ";
     Object.entries(intervention).map(([key, value]) => {
+      // handle execptions
       if (
         key != "createdAt" &&
         key != "intervention_ended" &&
@@ -73,9 +74,8 @@ function Home() {
         key != "status" &&
         key != "report"
       ) {
-        // handle execptions
+        // output value depends if object or number or string
         if (typeof value == "object" && value != null && key != "id") {
-          // output value depends if object or number
           str = str + key + " id: " + value.id + " ";
         } else if (typeof value == "object" && value != null && key == "id") {
           str = str + key + ": " + value.id + " ";
