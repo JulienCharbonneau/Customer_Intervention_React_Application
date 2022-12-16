@@ -40,13 +40,35 @@ const getCurrentUserBuildings = async (setBuildings) => {
 
 const BuildingsList = ({ buildings }) => {
   return buildings.map((building) => {
-    return <option key={building.id}>{building.address}</option>;
+    return <option value={building.id}>{building.address}</option>;
   });
 };
 
+async function getBatteries(id, setBatteries) {
+  const token = localStorage.getItem("user"); // get token from local storage
+  try {
+    const res = await axios.get("/buildings/" + id + "/batteries", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    setBatteries(res.data);
+    console.log("respone battery:", res.data);
+  } catch (error) {
+    console.warn("[getInterventions] error:", error);
+  }
+}
+
+const BatteriesList = ({ batteries }) => {
+  return batteries.map((batterie) => {
+    return <option value={batterie.id}> Battery id: {batterie.id}</option>;
+  });
+};
+///////////////////////////////////////////////////////////
 function InternventionsForm() {
   const [buildings, setBuildings] = useState([]);
-  const [building_id, setCurrentUserBuildingId] = useState(null);
+  const [building_id, setBuildingId] = useState(null);
+  const [batteries, setBatteries] = useState([]);
 
   let navigate = useNavigate();
 
@@ -59,6 +81,16 @@ function InternventionsForm() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log("select option: ", building_id);
+    async function fetchData() {
+      setBatteries(getBatteries(building_id, setBatteries));
+    }
+    fetchData();
+  }, [building_id]);
+  console.log("test batteries: ", batteries);
+
+  ///////////////////
   return (
     <div className="flex-column">
       <div className="flex-row align-self-end">
@@ -80,9 +112,15 @@ function InternventionsForm() {
       <div className="top-section"></div>
       <h1>Request for intervention </h1>
       <div className="m-3">
-        <Form.Select aria-label="Default select example">
+        <Form.Select
+          onChange={(e) => setBuildingId(e.target.value)}
+          id="building_option"
+          key={buildings.id}
+          aria-label="Default select example"
+        >
           <option>Select a building</option>
           {buildings.length > 0 && <BuildingsList buildings={buildings} />}
+          {batteries.length > 0 && <BatteriesList batteries={batteries} />}
         </Form.Select>
       </div>
     </div>
