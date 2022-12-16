@@ -43,7 +43,7 @@ const BuildingsList = ({ buildings }) => {
     return <option value={building.id}>{building.address}</option>;
   });
 };
-
+// get current user batteries
 async function getBatteries(id, setBatteries) {
   const token = localStorage.getItem("user"); // get token from local storage
   try {
@@ -64,15 +64,41 @@ const BatteriesList = ({ batteries }) => {
     return <option value={batterie.id}> Battery id: {batterie.id}</option>;
   });
 };
+
+// get current user column
+async function getColumns(id, setColumns) {
+  const token = localStorage.getItem("user"); // get token from local storage
+  try {
+    const res = await axios.get("/batteries/" + id + "/columns", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    setColumns(res.data);
+    console.log("respone column:", res.data);
+  } catch (error) {
+    console.warn("[getInterventions] error:", error);
+  }
+}
+
+const ColumnsList = ({ columns }) => {
+  return columns.map((column) => {
+    return <option value={column.id}> Column id: {column.id}</option>;
+  });
+};
+
 ///////////////////////////////////////////////////////////
 function InternventionsForm() {
   const [buildings, setBuildings] = useState([]);
   const [building_id, setBuildingId] = useState(null);
   const [batteries, setBatteries] = useState([]);
+  const [battery_id, setBatteryId] = useState(null);
+  const [columns, setColumns] = useState([]);
+  const [column_id, setColumnId] = useState(null);
 
   let navigate = useNavigate();
 
-  //fetch data  on page load
+  //fetch buildins data building   on page load
   useEffect(() => {
     async function fetchData() {
       console.log("Form mounted!");
@@ -81,14 +107,34 @@ function InternventionsForm() {
     fetchData();
   }, []);
 
+  // fetch batteries data on building select option change
   useEffect(() => {
-    console.log("select option: ", building_id);
+    console.log("select building option: ", building_id);
     async function fetchData() {
       setBatteries(getBatteries(building_id, setBatteries));
     }
     fetchData();
   }, [building_id]);
-  console.log("test batteries: ", batteries);
+
+  // fetch columns data on battery select option change
+
+  useEffect(() => {
+    console.log("select battery option: ", building_id);
+    async function fetchData() {
+      setBatteries(getBatteries(battery_id, setColumns));
+    }
+    fetchData();
+  }, [battery_id]);
+
+  // fetch columns data on columns select option change
+
+  // useEffect(() => {
+  //   console.log("select column option: ", column_id);
+  //   async function fetchData() {
+  //     setColumns(getColumns(column_id, setColumns));
+  //   }
+  //   fetchData();
+  // }, [column_id]);
 
   ///////////////////
   return (
@@ -120,7 +166,26 @@ function InternventionsForm() {
         >
           <option>Select a building</option>
           {buildings.length > 0 && <BuildingsList buildings={buildings} />}
+        </Form.Select>
+
+        <Form.Select
+          onChange={(e) => setBatteryId(e.target.value)}
+          id="battery_option"
+          key={batteries.id}
+          aria-label="Default select example"
+        >
+          <option>Select a Battery</option>
           {batteries.length > 0 && <BatteriesList batteries={batteries} />}
+        </Form.Select>
+
+        <Form.Select
+          onChange={(e) => setColumnId(e.target.value)}
+          id="column_option"
+          key={columns.id}
+          aria-label="Default select example"
+        >
+          <option>Select a Column</option>
+          {columns.length > 0 && <ColumnsList columns={columns} />}
         </Form.Select>
       </div>
     </div>
