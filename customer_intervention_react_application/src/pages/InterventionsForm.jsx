@@ -40,7 +40,11 @@ const getCurrentUserBuildings = async (setBuildings) => {
 
 const BuildingsList = ({ buildings }) => {
   return buildings.map((building) => {
-    return <option value={building.id}>{building.address}</option>;
+    return (
+      <option key={building.id} required value={building.id}>
+        {building.address}
+      </option>
+    );
   });
 };
 // get current user batteries
@@ -83,7 +87,7 @@ async function getColumns(id, setColumns) {
 
 const ColumnsList = ({ columns }) => {
   return columns.map((column) => {
-    return <option value={column.id}> Column id: {column.id}</option>;
+    return <option key={column.id} value={column.id}> Column id: {column.id}</option>;
   });
 };
 
@@ -105,23 +109,93 @@ async function getElevator(id, setElevators) {
 
 const ElevatorsList = ({ elevators }) => {
   return elevators.map((elevator) => {
-    return <option value={elevator.id}> Elevator id: {elevator.id}</option>;
+    return <option key={elevators.id} value={elevator.id}> Elevator id: {elevator.id}</option>;
   });
 };
 
-///////////////////////////////////////////////////////////
+function getReport(value, setReport) {
+  setReport(value);
+  console.log(value);
+}
+
+// async function handleSubmit(event) {
+//   const token = localStorage.getItem("user"); // get token from local storage
+//   const user_id = localStorage.getItem("user_id"); // get user id from local storage
+//   alert("test even.data: ", building_id)
+//   // try {
+//   //   const res = await axios.post("/interventions/new", {
+//   //     headers: {
+//   //       Authorization: "Bearer " + token,
+//   //     },
+//   //     data: {
+//   //       "customerID": user_id,
+//   //       "buildingID": building_id,
+//   //       "batteryID": battery_id,
+//   //       "columnID": column_id,
+//   //       "elevatorID": elevator_id,
+//   //       "report": report,
+//   //     },
+//   //   });
+//   //   console.log("respone post form:", res);
+//   // } catch (error) {
+//   //   console.warn("[post form] error:", error);
+//   // }
+// }
+
+
+// function writeAnswer () {
+//   const user_id = localStorage.getItem("user_id"); // get user id from local storage
+
+//   let answer = {
+//     "customerID": user_id,
+//   "buildingID": building_id,
+//   "batteryID": battery_id,
+//   "columnID": column_id,
+//   "elevatorID": elevator_id,
+//   "report": report
+//   }
+
+// }
+// ///////////////////////////////////////////////////////////
 function InternventionsForm() {
   const [buildings, setBuildings] = useState([]);
-  const [building_id, setBuildingId] = useState(null);
+  const [building_id, setBuildingId] = useState(0);
   const [batteries, setBatteries] = useState([]);
-  const [battery_id, setBatteryId] = useState(null);
+  const [battery_id, setBatteryId] = useState(0);
   const [columns, setColumns] = useState([]);
-  const [column_id, setColumnId] = useState(null);
+  const [column_id, setColumnId] = useState(0);
   const [elevators, setElevators] = useState([]);
-  const [elevator_id, setElevatorId] = useState(null);
+  const [elevator_id, setElevatorId] = useState(0);
+  const [report, setReport] = useState(0);
+  const [isValid, setIsValid] = useState(false);
+  
+  async function handleSubmit(event) {
+    const token = localStorage.getItem("user"); // get token from local storage
+    const user_id = localStorage.getItem("user_id"); // get user id from local storage
+    try {
+      const res = await axios.post("/interventions/new", {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+        data: {
+          customerID: user_id,
+          buildingID: building_id,
+          batteryID: battery_id,
+          columnID: column_id,
+          elevatorID: elevator_id,
+          report: report,
+        },
+      });
+      alert("success")
+      console.log("respone post form:", res);
+    } catch (error) {
+      console.warn("[post form] error:", error);
+      alert("failed")
 
+    }
+  }
   let navigate = useNavigate();
-
+  
   //fetch buildins data building   on page load
   useEffect(() => {
     async function fetchData() {
@@ -130,28 +204,29 @@ function InternventionsForm() {
     }
     fetchData();
   }, []);
-
+  
   // fetch batteries data on building select option change
   useEffect(() => {
+    setIsValid(building_id ? true : false);
     console.log("select building option: ", building_id);
     async function fetchData() {
       setBatteries(getBatteries(building_id, setBatteries));
     }
     fetchData();
   }, [building_id]);
-
+  
   // fetch columns data on battery select option change
-
+  
   useEffect(() => {
     console.log("select battery option: ", building_id);
     async function fetchData() {
-      setBatteries(getBatteries(battery_id, setColumns));
+      setBatteries(getColumns(battery_id, setColumns));
     }
     fetchData();
   }, [battery_id]);
-
+  
   // fetch elevators data on columns select option change
-
+  
   useEffect(() => {
     console.log("select elevator option: ", elevator_id);
     async function fetchData() {
@@ -159,6 +234,24 @@ function InternventionsForm() {
     }
     fetchData();
   }, [column_id]);
+
+  let initialValues = {
+    // "customerID": user_id,
+    "buildingID": building_id,
+    "batteryID": battery_id,
+    "columnID": column_id,
+    "elevatorID": elevator_id,
+    "report": report
+  }
+  const [values, setValues] = useState(initialValues);
+
+  // const handleOnSubmit = (e) => {
+  //   const { name, value } = e.target;
+  //   setValues({
+  //     ...values,
+  //     [name]: value,
+  //   });
+  // };
 
   ///////////////////
   return (
@@ -168,7 +261,7 @@ function InternventionsForm() {
           className="align-self-end m-3"
           variant="primary"
           onClick={() => go_to_home(navigate)}
-        >
+          >
           Return Back
         </Button>
         <Button
@@ -182,45 +275,69 @@ function InternventionsForm() {
       <div className="top-section"></div>
       <h1>Request for intervention </h1>
       <div className="m-3">
-        <Form.Select
-          onChange={(e) => setBuildingId(e.target.value)}
-          id="building_option"
-          key={buildings.id}
-          aria-label="Default select example"
+      
+        <Form
+          onSubmit={handleSubmit}
         >
-          <option>Select a building</option>
-          {buildings.length > 0 && <BuildingsList buildings={buildings} />}
-        </Form.Select>
+          <Form.Select
+            onChange={(e) => setBuildingId(e.target.value)}
+            id="building_option"
+            name="customerID"
+            aria-label="Default select example"
+          >
+            <option className="m-3">Select a building</option>
+            {buildings.length > 0 && <BuildingsList buildings={buildings} />}
+          </Form.Select>
 
-        <Form.Select
-          onChange={(e) => setBatteryId(e.target.value)}
-          id="battery_option"
-          key={batteries.id}
-          aria-label="Default select example"
-        >
-          <option>Select a Battery</option>
-          {batteries.length > 0 && <BatteriesList batteries={batteries} />}
-        </Form.Select>
+          <Form.Select
+            onChange={(e) => setBatteryId(e.target.value)}
+            id="battery_option"
+            
+            aria-label="Default select example"
+          >
+            <option className="m-3">Select a Battery</option>
+            {batteries.length > 0 && <BatteriesList batteries={batteries} />}
+          </Form.Select>
 
-        <Form.Select
-          onChange={(e) => setColumnId(e.target.value)}
-          id="column_option"
-          key={columns.id}
-          aria-label="Default select example"
-        >
-          <option>Select a Column</option>
-          {columns.length > 0 && <ColumnsList columns={columns} />}
-        </Form.Select>
+          <Form.Select
+            onChange={(e) => setColumnId(e.target.value)}
+            id="column_option"
+            
+            aria-label="Default select example"
+          >
+            <option className="m-3">Select a Column</option>
+            {columns.length > 0 && <ColumnsList columns={columns} />}
+          </Form.Select>
 
-        <Form.Select
-          onChange={(e) => setElevatorId(e.target.value)}
-          id="elevator_option"
-          key={elevators.id}
-          aria-label="Default select example"
-        >
-          <option>Select a Elevator</option>
-          {elevators.length > 0 && <ElevatorsList elevators={elevators} />}
-        </Form.Select>
+          <Form.Select
+            onChange={(e) => setElevatorId(e.target.value)}
+            id="elevator_option"
+            
+            aria-label="Default select example"
+          >
+            <option className="m-3">Select a Elevator</option>
+            {elevators.length > 0 && <ElevatorsList elevators={elevators} />}
+          </Form.Select>
+          <div className="form-group">
+            <label htmlFor="exampleFormControlTextarea1">Write report</label>
+            <textarea
+              required
+              onChange={(e) => getReport(e.target.value, setReport)}
+              className="form-control"
+              id="exampleFormControlTextarea1"
+              rows="5"
+            />
+          </div>
+          <Button
+          
+            disabled={!isValid}
+            className="m-3"
+            variant="primary"
+            type="submit"
+          >
+            Submit
+          </Button>
+        </Form>
       </div>
     </div>
   );
