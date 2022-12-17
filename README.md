@@ -13,3 +13,7 @@ Creating portails for the customer of rocket elevators where they can at first l
 #### Dependencies
 
 `react 18.2.0` `react bootstrap 2.7.0` `React Router` `axios` `node.js` `npm` 
+
+
+#### Use 
+to get acces to the first page run command `npm start` and enter this url on a webrowser `http://localhost:3000/Authentication`
